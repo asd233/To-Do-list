@@ -1,24 +1,68 @@
-var id_num = 0;
-function jiaru(){
-    // 获得输入的值
-    var title = document.getElementById("title").value;
-    //生成元素并修改样式
-    var li_ele = document.createElement("li");
-    var input_ele = document.createElement("input");
-    input_ele.setAttribute("type","checkbox");
-    input_ele.setAttribute("class","check");
-    var p_ele = document.createElement("p");
-    p_ele.setAttribute("id","p_"+id_num);
-    p_ele.innerHTML=title;
-    var a_ele = document.createElement("a");
-    a_ele.innerHTML="-";
-    //将生成的节点插入原有节点
-    li_ele.appendChild(input_ele);
-    li_ele.appendChild(p_ele);
-    li_ele.appendChild(a_ele);
-    document.getElementById("todolist").appendChild(li_ele);
-    id_num++;
-}
-function del(){
-    
-}
+; (function () {
+    function Item(value) {
+        this.value = value;
+    };
+    Item.prototype.render = function () {
+        let li = document.createElement("li");
+        let unfinished = document.querySelector("#unfinished");
+        let completed = document.querySelector("#completed");
+        let unfinishedNum = document.querySelector("#unfinishedNum");
+        var completedNum = document.querySelector("#completedNum");
+        //创建复选框
+        let input = document.createElement("input");
+        input.type = "checkbox";
+        input.className = "check";
+
+        //复选框绑定事件
+        input.onclick = function () {
+            if (this.checked) {
+                span.style.textDecoration = "line-through";
+                span.style.color = "#778899";
+                li.style.webkitFilter = "grayscale(100%)";
+                completed.append(li);
+            } else {
+                span.style.textDecoration = "none";
+                span.style.color = "#000";
+                li.style.webkitFilter = "grayscale(0%)";
+                unfinished.append(li);
+            }
+            unfinishedNum.innerText = unfinished.childNodes.length;
+            completedNum.innerText = completed.childNodes.length;
+        };
+        li.appendChild(input);
+
+        //填入事项
+        var span = document.createElement("span");
+        span.innerText = this.value;
+        li.appendChild(span);
+
+        //创建删除标签
+        var a = document.createElement("a");
+        a.href = "#";
+        a.innerText = "-";
+        a.onclick = function () {
+            li.remove();
+            unfinishedNum.innerText = unfinished.childNodes.length;
+            completedNum.innerText = completed.childNodes.length;
+        }
+
+
+        li.appendChild(a);
+        unfinished.appendChild(li);
+        unfinishedNum.innerText = unfinished.childNodes.length;
+    };
+
+    title.onkeydown = function (event) {
+        //回车键添加事件
+        if (event.keyCode == 13) {
+            if (title.value) {
+                let title = document.querySelector("#title")
+                let one = new Item(title.value);
+                one.render(title);
+                title.value = "";
+            }
+        }
+
+        window.Item = Item;
+    }
+})()
