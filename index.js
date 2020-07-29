@@ -2,10 +2,10 @@
     let that;
     function Item(value) {
         this.value = value;
-        this.li = document.createElement("li");
         that = this;
     };
     Item.prototype.render = function () {
+        let li = document.createElement("li");
         let unfinished = document.querySelector("#unfinished");
         let completed = document.querySelector("#completed");
         let unfinishedNum = document.querySelector("#unfinishedNum");
@@ -20,18 +20,18 @@
             if (this.checked) {
                 span.style.textDecoration = "line-through";
                 span.style.color = "#778899";
-                that.li.style.webkitFilter = "grayscale(100%)";
-                completed.append(that.li);
+                li.style.webkitFilter = "grayscale(100%)";
+                completed.append(li);
             } else {
                 span.style.textDecoration = "none";
                 span.style.color = "#000";
-                that.li.style.webkitFilter = "grayscale(0%)";
-                unfinished.append(that.li);
+                li.style.webkitFilter = "grayscale(0%)";
+                unfinished.append(li);
             }
             unfinishedNum.innerText = unfinished.childNodes.length;
             completedNum.innerText = completed.childNodes.length;
         };
-        this.li.appendChild(input);
+        li.appendChild(input);
 
         //填入事项
         var span = document.createElement("span");
@@ -51,24 +51,24 @@
                     input.remove();
                 }
             }
-            that.li.insertBefore(input, span);
+            li.insertBefore(input, span);
             input.focus();
         }
-        this.li.appendChild(span);
+        li.appendChild(span);
 
         //创建删除标签
         var a = document.createElement("a");
         a.href = "#";
         a.innerText = "-";
         a.onclick = function () {
-            that.li.remove();
+            li.remove();
             unfinishedNum.innerText = unfinished.childNodes.length;
             completedNum.innerText = completed.childNodes.length;
         }
 
 
-        this.li.appendChild(a);
-        unfinished.appendChild(this.li);
+        li.appendChild(a);
+        unfinished.appendChild(li);
         unfinishedNum.innerText = unfinished.childNodes.length;
     };
 
