@@ -67,14 +67,16 @@
             unfinished.appendChild(li);
             unfinishedNum.innerText = unfinished.childNodes.length;
         };
-        title.onblur = function () {
-            if (title.value) {
-                let one = new Item(title.value);
-                one.render(title);
-                title.value = "";
+        title.onkeydown = function (e) {
+            if (e.keyCode === 13) {
+                if (title.value) {
+                    let one = new Item(title.value);
+                    one.render(title);
+                    title.value = "";
+                }
             }
-
-            window.Item = Item;
         }
+        window.Item = Item;
+
     })
 })()
