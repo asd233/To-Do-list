@@ -7,10 +7,35 @@
         };
         Item.prototype.render = function () {
             let li = document.createElement("li");
-            let unfinished = document.querySelector("#unfinished");
-            let completed = document.querySelector("#completed");
-            let unfinishedNum = document.querySelector("#unfinishedNum");
-            var completedNum = document.querySelector("#completedNum");
+            li.draggable = true;
+            let unfinished = $("#unfinished");
+            let completed = $("#completed");
+
+            //拖拽效果开始
+            let obj = null;
+            unfinished[0].ondragstart = function (e) {
+                obj = e.target;
+            }
+            unfinished[0].ondragover = function () {
+                return false;
+            }
+            unfinished[0].ondrop = function (e) {
+                if (e.target.tagName == "LI") {
+                    e.target.before(obj);
+                } else if (e.target.parentNode.tagName == "LI") {
+                    e.target.parentNode.before(obj);
+                }
+                if (e.target.parentNode.id == "unfinished") {
+                    obj.childNodes[0].checked = 0;
+                    obj.childNodes[1].style.textDecoration = "none";
+                    obj.childNodes[1].style.color = "#000";
+                    obj.style.webkitFilter = "grayscale(0%)";
+                }
+            }
+            //拖拽效果结束
+
+            let unfinishedNum = $("#unfinishedNum");
+            let completedNum = $("#completedNum");
 
             //创建复选框
             let input = $("<input>");
@@ -19,26 +44,31 @@
             //复选框绑定事件
             input.on("click", function () {
                 if (this.checked) {
+                    //事件完成
+                    li.draggable = false;
                     li.style.webkitFilter = "grayscale(100%)";
                     span.css({ "textDecoration": "line-through", "color": "#778899" })
                     completed.append(li);
                 } else {
-                    span.css({ "textDecoration": "none", "color": "#000" });
+                    //事件未完成
+                    li.draggable = true;
                     li.style.webkitFilter = "grayscale(0%)";
+                    span.css({ "textDecoration": "none", "color": "#000" });
                     unfinished.append(li);
                 }
-                unfinishedNum.innerText = unfinished.childNodes.length;
-                completedNum.innerText = completed.childNodes.length;
+                unfinishedNum.text(unfinished[0].childNodes.length);
+                completedNum.text(completed[0].childNodes.length);
             });
             li.append(input[0]);
 
-            //填入事项
+            //点击文本可修改事项
             let span = $("<span></span>");
             span.text(this.value);
             span.on("click", function () {
                 let input = $("<input>");
-                input.prop({ "type": "text", "value": that.value })
+                input.prop({ "type": "text", "value": this.innerText })
                 span.text("");
+                //文本控件失去焦点时修改事件
                 input.on("blur", function () {
                     if (input.val()) {
                         that.value = input.val();
@@ -55,18 +85,20 @@
             li.append(span[0]);
 
             //创建删除标签
-            var a = $("<a />");
+            var a = $("<a/>");
             a.prop("href", "#").text("-");
             a.on("click", function () {
                 li.remove();
-                unfinishedNum.innerText = unfinished.childNodes.length;
-                completedNum.innerText = completed.childNodes.length;
+                unfinishedNum.text(unfinished[0].childNodes.length);
+                completedNum.text(completed[0].childNodes.length);
             })
 
             li.append(a[0]);
-            unfinished.appendChild(li);
-            unfinishedNum.innerText = unfinished.childNodes.length;
+            unfinished.append(li);
+            unfinishedNum.text(unfinished[0].childNodes.length);
         };
+
+        //回车时添加事件
         title.onkeydown = function (e) {
             if (e.keyCode === 13) {
                 if (title.value) {
