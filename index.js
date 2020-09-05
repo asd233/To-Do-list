@@ -25,12 +25,6 @@
                 } else if (e.target.parentNode.tagName == "LI") {
                     e.target.parentNode.before(obj);
                 }
-                if (e.target.parentNode.id == "unfinished") {
-                    obj.childNodes[0].checked = 0;
-                    obj.childNodes[1].style.textDecoration = "none";
-                    obj.childNodes[1].style.color = "#000";
-                    obj.style.webkitFilter = "grayscale(0%)";
-                }
             }
             //拖拽效果结束
 
